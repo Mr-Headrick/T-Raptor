@@ -16,10 +16,8 @@
   int fastSpd = 62;
   int spd = 52;
   int slowSpd = 42;
-  int stopSpd =8;
-  int joy_x;            // will hold the X value of the analog stick (choices below)
-  int joy_y;            // will hold the Y value of the analog stick (choices below)
-  int threshold = 4;   // helps to eliminate 'noise' from a joystick that isn't perfectly at (0,0)
+  int stopSpd = 8;
+
 task main()
 {
 	clearLCDLine(0);                      // Clear line 1 (0) of the LCD
@@ -82,8 +80,8 @@ task main()
          motor[lowLeftMotr] = stopSpd;
     }
 //+++++++++++++++++++++++++++++++++++++++++++++| DRIVE |+++++++++++++++++++++++++++++++++++++++++++++
-    motor[leftMotor]  = (vexRT[Ch2] + vexRT[Ch1])/2;  // (y + x)/2
-    motor[rightMotor] = (vexRT[Ch2] - vexRT[Ch1])/2;  // (y - x)/2
+    motor[drvLeftMotr]  = (vexRT[Ch2] + vexRT[Ch1])/2;  // (y + x)/2
+    motor[drvRiteMotr] = (vexRT[Ch2] - vexRT[Ch1])/2;  // (y - x)/2
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
  if(vexRT[Btn7L]==1)      {
