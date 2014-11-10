@@ -82,33 +82,8 @@ task main()
          motor[lowLeftMotr] = stopSpd;
     }
 //+++++++++++++++++++++++++++++++++++++++++++++| DRIVE |+++++++++++++++++++++++++++++++++++++++++++++
-    joy_x = vexRT[Ch1];   // This is the RIGHT analog stick.  For LEFT, change 'Ch1' to 'Ch4'.
-    joy_y = vexRT[Ch2];   // This is the RIGHT analog stick.  For LEFT, change 'Ch2' to 'Ch3'.
-
-    // Forward, and swing turns: (both abs(X) and abs(Y) are above the threshold, and Y is POSITIVE)
-    if((abs(joy_x) > threshold) && (abs(joy_y) > threshold) && (joy_y > 0))
-    {
-      motor[drvLeftMotr]  = (joy_y + joy_x)/2;
-      motor[drvRiteMotr] = (joy_y - joy_x)/2;
-    }
-    // Backwards and swing turns: (both abs(X) and abs(Y) are above the threshold, and Y is NEGATIVE)
-    else if((abs(joy_x) > threshold) && (abs(joy_y) > threshold) && (joy_y < 0))
-    {
-      motor[drvLeftMotr]  = (joy_y - joy_x)/2;
-      motor[drvRiteMotr] = (joy_y + joy_x)/2;
-    }
-    // Turning in place: (abs(X) is above the threshold, abs(Y) is below the threshold)
-    else if((abs(joy_x) > threshold) && (abs(joy_y) < threshold))
-    {
-      motor[drvLeftMotr]  = joy_x;
-      motor[drvRiteMotr] = (-1 * joy_x);
-    }
-    // Standing still: (both abs(X) and abs(Y) are below the threshold)
-    else
-    {
-      motor[drvLeftMotr]  = 0;
-      motor[drvRiteMotr] = 0;
-    }
+    motor[leftMotor]  = (vexRT[Ch2] + vexRT[Ch1])/2;  // (y + x)/2
+    motor[rightMotor] = (vexRT[Ch2] - vexRT[Ch1])/2;  // (y - x)/2
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
  if(vexRT[Btn7L]==1)      {
