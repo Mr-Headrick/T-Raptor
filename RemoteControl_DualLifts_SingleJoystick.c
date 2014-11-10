@@ -53,15 +53,8 @@ task main()
     }
     else
     {
-      if(SensorValue(topRitePot)>SensorValue(topLeftPot)+buffer){
          motor[topRiteMotr] = stopSpd;
-         motor[topLeftMotr] = slowSpd;}
-      else if(SensorValue(topLeftPot)>SensorValue(topRitePot)+buffer){
          motor[topLeftMotr] = stopSpd;
-         motor[topRiteMotr] = slowSpd;}
-      else {
-         motor[topRiteMotr] = stopSpd;
-         motor[topLeftMotr] = stopSpd;}
     }
 
 
@@ -85,15 +78,8 @@ task main()
     }
     else
     {
-      if(SensorValue(lowRitePot)>SensorValue(lowLeftPot)+buffer){
          motor[lowRiteMotr] = stopSpd;
-         motor[lowLeftMotr] = slowSpd;}
-      else if(SensorValue(lowLeftPot)>SensorValue(lowRitePot)+buffer){
          motor[lowLeftMotr] = stopSpd;
-         motor[lowRiteMotr] = slowSpd;}
-      else {
-         motor[lowRiteMotr] = stopSpd;
-         motor[lowLeftMotr] = stopSpd;}
     }
 //+++++++++++++++++++++++++++++++++++++++++++++| DRIVE |+++++++++++++++++++++++++++++++++++++++++++++
     joy_x = vexRT[Ch1];   // This is the RIGHT analog stick.  For LEFT, change 'Ch1' to 'Ch4'.
