@@ -29,55 +29,26 @@ int leftEnc;
 
 task main()
 {
+//Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
 	SensorType[gyro] = sensorNone;
   wait1Msec(1000);
-  //Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
   SensorType[gyro] = sensorGyro;
   wait1Msec(2000);
 
 rightEnc = SensorValue(rightEncoder);
 leftEnc = SensorValue(leftEncoder);
 
+//ADD CODE HERE --- set claw to be parallel to the grounds
 
-while(loopcontroller<=1){
-
-waitInMilliseconds(100);
-
-//----------------------------  goforward
-startMotor(drvRiteMotr,63);
-startMotor(drvLeftMotr,63);
-
-if(abs(SensorValue(rightEncoder))>(abs(rightEnc)+1000))
-	 {
-	   stopMotor(drvRiteMotr); if(loopcontroller<=1){loopcontroller++;}
-   }
-if(abs(SensorValue(leftEncoder))>(abs(leftEnc)+1000))
-	 {
-	   stopMotor(drvLeftMotr); if(loopcontroller<=1){loopcontroller++;}
-	 }
-} //while loop ends
-//----------------------------- go forward
-
-//*********************************************************************
-
-startMotor(intake,63);
-startMotor(intake2,63);
-wait(2);
-stopMotor(intake);
-stopMotor(intake2);
-
-//*********************************************************************
-
-//----------------------------- turn 180 degrees
-while(abs(0-SensorValue[gyro]) < 1600)
+// ----------------------------- turns to the auto loader
+while(abs(0-SensorValue[gyro]) < 290)
   {
   	pointTurn(right,63);
   }
-//----------------------------- turn 180 degrees
-
+//----------------------------- turns to the auto loader
 //*********************************************************************
 
-//----------------------------- go back to floorgoal
+//----------------------------- go foward
 rightEnc=SensorValue(rightEncoder); //decrease when forward
 leftEnc=SensorValue(leftEncoder); //increaes when forward
 
@@ -87,54 +58,95 @@ waitInMilliseconds(100);
 startMotor(drvRiteMotr,63);
 startMotor(drvLeftMotr,63);
 
-if(abs(SensorValue(rightEncoder))>(abs(rightEnc)+1000))
+if(abs(SensorValue(rightEncoder))>(abs(rightEnc)+240))
 	 {
 	   stopMotor(drvRiteMotr); if(loopcontroller<=2){loopcontroller2++;}
    }
-if(abs(SensorValue(leftEncoder))>(abs(leftEnc)+1000))
+if(abs(SensorValue(leftEncoder))>(abs(leftEnc)+240))
 	 {
 	   stopMotor(drvLeftMotr); if(loopcontroller<=2){loopcontroller2++;}
 	 }
 } //while loop ends
-//----------------------------- go back to floorgoal
+//----------------------------- go forward
 
 //*********************************************************************
 
-//----------------------------- turn to section
-while(abs(0-SensorValue[gyro]) < 300)
-  {
-  	pointTurn(right,63);
-  }
-//----------------------------- turn to section
+//get section
 
-//*********************************************************************
+//lift its claw
+startMotor(topRiteMotr,63);
+startMotor(topLeftMotr,63);
+wait(0.5);
+startMotor(topRiteMotr,13);
+startMotor(topLeftMotr,13);
 
-startMotor(claw,100);
-wait(1);
-stopMotor(claw);
-
+//goes forward
 forward(63);
-wait(0.3);
+wait(0.7);
 stop();
 
-startMotor(claw,80);
+//grabs the section
+startMotor(claw,63);
 wait(1);
+startMotor(claw,40);
+
+
+//takes the section out of the autoloader
+backward(63);
+wait(0.5);
 stop();
 
+
+startMotor(topRiteMotr,80);
+startMotor(topLeftMotr,80);
+wait(1);
+startMotor(topRiteMotr,13);
+startMotor(topLeftMotr,13);
+
+startMotor(intake,10);
 //*********************************************************************
 
-//----------------------------- turn to Skyrise
-while(abs(0-SensorValue[gyro]) < 900)
+//backs away from the autoloader
+backward(63);
+wait(1.5);
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+//----------------------------- turns direction to skyrise
+while(abs(0-SensorValue[gyro]) < 300)
   {
   	pointTurn(left,63);
   }
-//----------------------------- turn to skyrise
+
 
 //*********************************************************************
 
-//insert skyrise
+  //goes to the skyrise
+ forward(63);
+ wait(1.4);
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
 
-//insert cubes
+// lowers the lift
+startMotor(topLeftMotr,-80);
+  startMotor(topRiteMotr,-80	);
+  wait(0.5);
+  startMotor(topLeftMotr,8);
+  startMotor(topRiteMotr,8);
+
+//release the section
+  wait(0.3);
+  startMotor(claw, -80);
+  wait(0.5);
+  stop();
+
+
+//release the cube
+  startMotor(intake,63);
+  startMotor(intake2,63);
+  wait(2);
+  stopMotor(intake);
+  stopMotor(intake2);
 
 
 } // main ends
