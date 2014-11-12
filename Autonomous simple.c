@@ -9,7 +9,7 @@
 #pragma config(Motor,  port2,           drvRiteMotr,   tmotorVex393_MC29, openLoop, encoderPort, I2C_1)
 #pragma config(Motor,  port3,           drvLeftMotr,   tmotorVex393_MC29, openLoop, encoderPort, I2C_2)
 #pragma config(Motor,  port4,           topRiteMotr,   tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port5,           topLeftMotr,   tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port5,           topLeftMotr,   tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port6,           lowRiteMotr,   tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port7,           lowLeftMotr,   tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port8,           intake,        tmotorVex393_MC29, openLoop, reversed)
@@ -29,7 +29,7 @@ int leftEnc;
 
 task main()
 {
-//Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
+	forward(leftEnc);
 	SensorType[gyro] = sensorNone;
   wait1Msec(1000);
   SensorType[gyro] = sensorGyro;
@@ -38,10 +38,13 @@ task main()
 rightEnc = SensorValue(rightEncoder);
 leftEnc = SensorValue(leftEncoder);
 
+int autonomous=0; //0 = one section, one cube; 1 = grab a cube and put it in nearest post
+
 //ADD CODE HERE --- set claw to be parallel to the grounds
 
+if(autonomous==0){
 // ----------------------------- turns to the auto loader
-while(abs(0-SensorValue[gyro]) < 290)
+while(abs(0+SensorValue[gyro]) < 290)
   {
   	pointTurn(right,63);
   }
@@ -49,8 +52,8 @@ while(abs(0-SensorValue[gyro]) < 290)
 //*********************************************************************
 
 //----------------------------- go foward
-rightEnc=SensorValue(rightEncoder); //decrease when forward
-leftEnc=SensorValue(leftEncoder); //increaes when forward
+rightEnc=SensorValue(rightEncoder);
+leftEnc=SensorValue(leftEncoder);
 
   while(loopcontroller2<=2){
 
@@ -76,7 +79,7 @@ if(abs(SensorValue(leftEncoder))>(abs(leftEnc)+240))
 //lift its claw
 startMotor(topRiteMotr,63);
 startMotor(topLeftMotr,63);
-wait(0.5);
+wait(0.4);
 startMotor(topRiteMotr,13);
 startMotor(topLeftMotr,13);
 
@@ -99,7 +102,7 @@ stop();
 
 startMotor(topRiteMotr,80);
 startMotor(topLeftMotr,80);
-wait(1);
+wait(0.5);
 startMotor(topRiteMotr,13);
 startMotor(topLeftMotr,13);
 
@@ -113,7 +116,7 @@ stopMotor(drvLeftMotr);
 stopMotor(drvRiteMotr);
 
 //----------------------------- turns direction to skyrise
-while(abs(0-SensorValue[gyro]) < 300)
+while(abs(0+SensorValue[gyro]) < 320)
   {
   	pointTurn(left,63);
   }
@@ -123,7 +126,7 @@ while(abs(0-SensorValue[gyro]) < 300)
 
   //goes to the skyrise
  forward(63);
- wait(1.4);
+ wait(0.8);
 stopMotor(drvLeftMotr);
 stopMotor(drvRiteMotr);
 
@@ -131,8 +134,8 @@ stopMotor(drvRiteMotr);
 startMotor(topLeftMotr,-80);
   startMotor(topRiteMotr,-80	);
   wait(0.5);
-  startMotor(topLeftMotr,8);
-  startMotor(topRiteMotr,8);
+  startMotor(topLeftMotr,12);
+  startMotor(topRiteMotr,12);
 
 //release the section
   wait(0.3);
@@ -147,6 +150,5 @@ startMotor(topLeftMotr,-80);
   wait(2);
   stopMotor(intake);
   stopMotor(intake2);
-
-
+}
 } // main ends
