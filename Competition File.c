@@ -31,22 +31,29 @@
 // following function.
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-int loopcontroller=0;
-int loopcontroller2=0;
 int rightEnc;
 int leftEnc;
+int loopcontroller=0;
+int loopcontroller2=0;
+int buffer = 61;
+  int fastSpd = 100;
+  int spd = 63;
+  int slowSpd = 52;
+  int stopSpd = 12;
 
 void pre_auton()
 {
   // Set bStopTasksBetweenModes to false if you want to keep user created tasks running between
   // Autonomous and Tele-Op modes. You will need to manage all user created tasks if set to false.
   bStopTasksBetweenModes = true;
-  startMotor(claw,-63);
+  startMotor(claw,-100);
   wait(2);
   stopMotor(claw);
 
   nMotorEncoder[drvRiteMotr] = 0;
 	nMotorEncoder[drvLeftMotr] = 0;
+
+
 
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
@@ -63,9 +70,9 @@ void pre_auton()
 
 task autonomous()
 {//Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
-
-		SensorType[gyro] = sensorNone;
+	SensorType[gyro] = sensorNone;
   wait1Msec(1000);
+  //Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
   SensorType[gyro] = sensorGyro;
   wait1Msec(2000);
 
@@ -77,116 +84,122 @@ int autonomous=0; //0 = one section, one cube; 1 = grab a cube and put it in nea
 //ADD CODE HERE --- set claw to be parallel to the grounds
 
 if(autonomous==0){
-// ----------------------------- turns to the auto loader
-while(abs(0+SensorValue[gyro]) < 290)
+
+SensorType[gyro] = sensorNone;
+  wait1Msec(1000);
+  //Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
+  SensorType[gyro] = sensorGyro;
+  wait1Msec(2000);
+
+  //goforward
+  startMotor(drvLeftMotr,100);
+  startMotor(drvRiteMotr,100);
+  wait(0.4);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+  //gobackward
+
+
+  startMotor(drvLeftMotr,-100);
+  startMotor(drvRiteMotr,-100);
+  untilEncoderCounts(200,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+   wait(0.1);
+
+ //turn to autoloader
+while(abs(0-SensorValue[gyro]) < 250)
   {
-  	pointTurn(right,63);
+  	pointTurn(right,90);
   }
-//----------------------------- turns to the auto loader
-//*********************************************************************
-
-//----------------------------- go foward
-rightEnc=SensorValue(rightEncoder); //decrease when forward
-leftEnc=SensorValue(leftEncoder); //increaes when forward
-
-  while(loopcontroller2<=2){
-
-waitInMilliseconds(100);
-startMotor(drvRiteMotr,63);
-startMotor(drvLeftMotr,63);
-
-if(abs(SensorValue(rightEncoder))>(abs(rightEnc)+230))
-	 {
-	   stopMotor(drvRiteMotr); if(loopcontroller<=2){loopcontroller2++;}
-   }
-if(abs(SensorValue(leftEncoder))>(abs(leftEnc)+230))
-	 {
-	   stopMotor(drvLeftMotr); if(loopcontroller<=2){loopcontroller2++;}
-	 }
-} //while loop ends
-//----------------------------- go forward
-
-//*********************************************************************
-
-//get section
-
-//lift its claw
-startMotor(topRiteMotr,63);
-startMotor(topLeftMotr,63);
-wait(0.4);
-startMotor(topRiteMotr,13);
-startMotor(topLeftMotr,13);
-
-//goes forward
-forward(63);
-wait(0.8);
-stop();
-
-//grabs the section
-startMotor(claw,63);
-wait(1);
-startMotor(claw,40);
-
-
-//takes the section out of the autoloader
-backward(63);
-wait(0.5);
-stop();
-
-
-startMotor(topRiteMotr,80);
-startMotor(topLeftMotr,80);
-wait(0.5);
-startMotor(topRiteMotr,13);
-startMotor(topLeftMotr,13);
-
-startMotor(intake,10);
-//*********************************************************************
-
-//backs away from the autoloader
-backward(63);
-wait(1.5);
 stopMotor(drvLeftMotr);
 stopMotor(drvRiteMotr);
 
-//----------------------------- turns direction to skyrise
-while(abs(0+SensorValue[gyro]) < 300)
-  {
-  	pointTurn(left,63);
-  }
+ wait(0.1);
+
+ //back up little bit
+ SensorValue[rightEncoder]=0;
+
+  startMotor(drvLeftMotr,-90);
+  startMotor(drvRiteMotr,-90);
+  untilEncoderCounts(100,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+   wait(0.1);
 
 
-//*********************************************************************
+  startMotor(topLeftMotr,spd+23);
+  startMotor(topRiteMotr,spd+23);
+  wait(0.2);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
 
-  //goes to the skyrise
- forward(63);
- wait(0.6);
-stopMotor(drvLeftMotr);
-stopMotor(drvRiteMotr);
+  wait(0.1);
 
-// lowers the lift
-startMotor(topLeftMotr,-80);
-  startMotor(topRiteMotr,-80	);
-  wait(0.5);
-  startMotor(topLeftMotr,12);
-  startMotor(topRiteMotr,12);
 
-//release the section
+
+  startMotor(drvLeftMotr,80);
+  startMotor(drvRiteMotr,80);
+  wait(0.8);
+   stopMotor(drvLeftMotr);
+   stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+  startMotor(claw,100);
+  wait(1);
+  startMotor(claw,0);
+
+  wait(0.1);
+
+ startMotor(drvLeftMotr,-90);
+  startMotor(drvRiteMotr,-90);
+  wait(0.2);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  startMotor(topLeftMotr,spd+20);
+  startMotor(topRiteMotr,spd+20);
   wait(0.3);
-  startMotor(claw, -80);
-  wait(0.5);
-  stop();
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
 
+  while(SensorValue[gyro] < 270)
+  {
+  	pointTurn(left,90);
+  }
 
-//release the cube
-  startMotor(intake,63);
-  startMotor(intake2,63);
-  wait(2);
-  stopMotor(intake);
-  stopMotor(intake2);
-}
-else if(autonomous==1){
-//ADD THE OTHER AUTONOMOUS CODE
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+  SensorValue[leftEncoder]=0;
+
+  startMotor(drvLeftMotr,80);
+  startMotor(drvRiteMotr,80);
+  untilEncoderCounts(260,leftEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+   while(SensorValue[gyro] < 300)
+  {
+  	pointTurn(left,90);
+  }
+
+  wait(0.1);
+
+  startMotor(claw,-100);
+  wait(0.3);
+  stopMotor(claw);
+
 }
 
 }
@@ -199,11 +212,7 @@ else if(autonomous==1){
 // You must modify the code to add your own robot specific commands here.
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-  int buffer = 61;
-  int fastSpd = 100;
-  int spd = 63;
-  int slowSpd = 52;
-  int stopSpd = 12;
+
 
 task usercontrol()
 {
@@ -254,8 +263,11 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
 
     if(vexRT[Btn5U] == 1)
     {
-    	   motor[lowRiteMotr] = fastSpd;
+    	   motor[lowRiteMotr] = fastSpd+20;
          motor[lowLeftMotr] = fastSpd;
+         wait(0.4);
+           stopMotor(lowRiteMotr);
+         stopMotor(lowLeftMotr);
          /*
       if(SensorValue(lowRitePot)>SensorValue(lowLeftPot)+buffer){
          motor[lowRiteMotr] = slowSpd;
@@ -268,8 +280,11 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
          motor[lowLeftMotr] = spd;}*/
     }
     else if(vexRT[Btn5D] == 1)
-    {    motor[lowRiteMotr] = -fastSpd;
+    {    motor[lowRiteMotr] = -fastSpd-20;
          motor[lowLeftMotr] = -fastSpd;
+              wait(0.4);
+           stopMotor(lowRiteMotr);
+         stopMotor(lowLeftMotr);
     }
     else
     {
@@ -277,8 +292,8 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
          motor[lowLeftMotr] = stopSpd;
     }
 //+++++++++++++++++++++++++++++++++++++++++++++| DRIVE |+++++++++++++++++++++++++++++++++++++++++++++
-    motor[drvLeftMotr]  = (vexRT[Ch2] + vexRT[Ch1])/2;  // (y + x)/2
-    motor[drvRiteMotr] = (vexRT[Ch2] - vexRT[Ch1])/2;  // (y - x)/2
+    motor[drvLeftMotr]  = vexRT[Ch3];   // Left Joystick Y value
+    motor[drvRiteMotr] = vexRT[Ch2];
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
  if(vexRT[Btn7L]==1)      {
@@ -300,13 +315,13 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
 
 
   if(vexRT[Btn8R]==1){
-    	motor[claw]=63;}
+    	motor[claw]=80;}
   else if(vexRT[Btn8D]==1){
-  	  motor[claw]=-63;}
+  	  motor[claw]=-80;}
   else
   	{motor[claw]=0;}
 	}
 
-  displayLCDString(0,0,"RE:"); displayLCDNumber(0,3,SensorValue(rightEncoder));
-  displayLCDString(1,0,"LE:"); displayLCDNumber(1,3,SensorValue(leftEncoder));
+
+
 }
