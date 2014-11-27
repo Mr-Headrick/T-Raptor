@@ -39,7 +39,7 @@ int buffer = 61;
   int fastSpd = 100;
   int spd = 63;
   int slowSpd = 52;
-  int stopSpd = 12;
+  int stopSpd = 15;
 
 void pre_auton()
 {
@@ -75,7 +75,10 @@ void pre_auton()
 /////////////////////////////////////////////////////////////////////////////////////////
 
 task autonomous()
-{SensorType[gyro] = sensorNone;
+{
+
+
+SensorType[gyro] = sensorNone;
   wait1Msec(500);
   //Reconfigure in5 as a Gyro sensor and allow time for ROBOTC to calibrate it
   SensorType[gyro] = sensorGyro;
@@ -84,7 +87,7 @@ task autonomous()
 rightEnc = SensorValue(rightEncoder);
 leftEnc = SensorValue(leftEncoder);
 
-int autonomous=0; //0 = one section, one cube; 1 = grab a cube and put it in nearest post
+int autonomous=2; //0 = one section, one cube; 1 = grab a cube and put it in nearest post
 
 //ADD CODE HERE --- set claw to be parallel to the grounds
 
@@ -253,6 +256,225 @@ stopMotor(drvRiteMotr);
   stopMotor(drvRiteMotr);
 
 }
+
+else if(autonomous == 1){
+	waitInMilliseconds(10);
+
+startMotor(intake,-80);
+startMotor(intake2,-80);
+wait(0.3);
+stopMotor(intake);
+stopMotor(intake2);
+
+	  startMotor(claw,-100);
+  wait(0.2);
+  stopMotor(claw);
+
+  //goforward
+  startMotor(drvLeftMotr,100);
+  startMotor(drvRiteMotr,100);
+  wait(0.5);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+  //gobackward
+
+
+  startMotor(drvLeftMotr,-100);
+  startMotor(drvRiteMotr,-100);
+  untilEncoderCounts(400,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+   wait(0.1);
+
+while(SensorValue[gyro] < 100)
+  {
+  	pointTurn(left,90);
+  }
+
+  wait(0.1);
+
+  SensorValue[rightEncoder]=0;
+  startMotor(drvLeftMotr,100);
+  startMotor(drvRiteMotr,100);
+  untilEncoderCounts(120,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+ //turn to autoloader
+while(SensorValue[gyro] > -270)
+  {
+  	pointTurn(right,90);
+  }
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+ wait(0.1);
+
+ //back up little bit
+ SensorValue[rightEncoder]=0;
+
+  startMotor(drvLeftMotr,-90);
+  startMotor(drvRiteMotr,-90);
+  untilEncoderCounts(100,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+   wait(0.1);
+
+
+  startMotor(topLeftMotr,spd+10);
+  startMotor(topRiteMotr,spd+10);
+  wait(0.2);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  wait(0.1);
+
+
+  SensorValue[rightEncoder]=0;
+  startMotor(drvLeftMotr,100);
+  startMotor(drvRiteMotr,100);
+ wait(0.7);
+   stopMotor(drvLeftMotr);
+   stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+  startMotor(claw,100);
+  wait(1);
+  startMotor(claw,0);
+
+  wait(0.1);
+
+ startMotor(drvLeftMotr,-90);
+  startMotor(drvRiteMotr,-90);
+  wait(0.2);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  startMotor(topLeftMotr,spd+20);
+  startMotor(topRiteMotr,spd+20);
+  wait(0.3);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  SensorValue[rightEnc]=0;
+  startMotor(drvLeftMotr,-90);
+  startMotor(drvRiteMotr,-90);
+  untilEncoderCounts(-300,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+
+
+  while(SensorValue[gyro] < 170)
+  {
+  	pointTurn(left,90);
+  }
+
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+  SensorValue[leftEncoder]=0;
+
+
+  wait(0.1);
+
+   while(SensorValue[gyro] < -60)
+  {
+  	pointTurn(left,90);
+  }
+
+  wait(0.1);
+
+  startMotor(drvLeftMotr,80);
+  startMotor(drvRiteMotr,80);
+  wait(0.1);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  wait(0.1);
+
+
+
+    startMotor(intake,-100);
+  startMotor(intake2,-100);
+  wait(0.1);
+  stopMotor(intake);
+  stopMotor(intake2);
+
+  wait(0.5);
+
+   startMotor(topLeftMotr,-spd+20);
+  startMotor(topRiteMotr,-spd+20);
+  wait(0.5);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  wait(1);
+
+
+
+  startMotor(claw,-100);
+  wait(0.3);
+  stopMotor(claw);
+
+ startMotor(drvLeftMotr,-100);
+  startMotor(drvRiteMotr,-100);
+  wait(0.4);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+
+}
+
+else if(autonomous==2){
+//right Enc normal, left Enc opposite
+
+while(SensorValue[gyro] >-200){
+pointTurn(right,90);
+}
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+wait(0.1);
+
+ startMotor(topLeftMotr,spd+20);
+  startMotor(topRiteMotr,spd+20);
+  wait(0.5);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+    startMotor(intake,100);
+startMotor(intake2,100);
+wait(2);
+stopMotor(intake);
+stopMotor(intake2);
+
+wait(0.1);
+
+SensorValue[rightEncoder]=0;
+ startMotor(drvRiteMotr,-spd+20);
+  startMotor(drvLeftMotr,-spd+20);
+ untilEncoderCounts(-200,rightEncoder);
+  stopMotor(drvRiteMotr);
+  stopMotor(drvLeftMotr);
+
+  wait(0.1);
+
+  while(SensorValue[gyro] >-900){
+pointTurn(right,90);
+}
+
+}
+
 
 }
 
