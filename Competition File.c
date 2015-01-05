@@ -51,11 +51,6 @@ void pre_auton()
   wait(1.5);
   stopMotor(claw);
 
-  startMotor(topLeftMotr,-80);
-  startMotor(topRiteMotr,-80);
-  wait(0.3);
-  stopMotor(topLeftMotr);
-  stopMotor(topRiteMotr);
 
   nMotorEncoder[drvRiteMotr] = 0;
 	nMotorEncoder[drvLeftMotr] = 0;
@@ -78,6 +73,11 @@ void pre_auton()
 task autonomous()
 {
 
+clearLCDLine(0);                      // Clear line 1 (0) of the LCD
+  clearLCDLine(1);                      // Clear line 2 (1) of the LCD
+  bLCDBacklight = true;                 // Turn on LCD Backlight
+	displayLCDNumber(0,0,SensorValue[gyro]);
+	wait1Msec(500);
 
 SensorType[gyro] = sensorNone;
   wait1Msec(500);
@@ -95,14 +95,15 @@ leftEnc = SensorValue(leftEncoder);
 //ADD CODE HERE --- set claw to be parallel to the grounds
 
 if(auto==0){
+	waitInMilliseconds(10);
 
-startMotor(intake,-80);
-startMotor(intake2,-80);
-wait(0.3);
+startMotor(intake,-63);
+startMotor(intake2,-63);
+wait(0.4);
 stopMotor(intake);
 stopMotor(intake2);
 
-  startMotor(claw,-100);
+	  startMotor(claw,-100);
   wait(0.2);
   stopMotor(claw);
 
@@ -117,16 +118,16 @@ stopMotor(intake2);
 
   //gobackward
 
-  SensorValue[rightEncoder]=0;
+
   startMotor(drvLeftMotr,-100);
   startMotor(drvRiteMotr,-100);
-  untilEncoderCounts(-100,rightEncoder);
+  untilEncoderCounts(400,rightEncoder);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
    wait(0.1);
 
-while(SensorValue[gyro]> -100)
+while(SensorValue[gyro] > -100)
   {
   	pointTurn(right,90);
   }
@@ -142,7 +143,7 @@ while(SensorValue[gyro]> -100)
 
   wait(0.1);
  //turn to autoloader
-while(SensorValue[gyro] < 250)
+while(SensorValue[gyro] < 240)
   {
   	pointTurn(left,90);
   }
@@ -162,11 +163,9 @@ stopMotor(drvRiteMotr);
 
    wait(0.1);
 
-
-
-  startMotor(topLeftMotr,spd+10);
-  startMotor(topRiteMotr,spd+10);
-  wait(0.15);
+  startMotor(topLeftMotr,spd);
+  startMotor(topRiteMotr,spd);
+  wait(0.2);
   startMotor(topLeftMotr,stopSpd);
   startMotor(topRiteMotr,stopSpd);
 
@@ -174,9 +173,9 @@ stopMotor(drvRiteMotr);
 
 
   SensorValue[rightEncoder]=0;
-  startMotor(drvLeftMotr,80);
-  startMotor(drvRiteMotr,80);
-  wait(0.6);
+  startMotor(drvLeftMotr,100);
+  startMotor(drvRiteMotr,100);
+ wait(0.6);
    stopMotor(drvLeftMotr);
    stopMotor(drvRiteMotr);
 
@@ -184,31 +183,32 @@ stopMotor(drvRiteMotr);
 
   startMotor(claw,100);
   wait(1);
-  startMotor(claw,0);
+  startMotor(claw,50);
 
   wait(0.1);
 
  startMotor(drvLeftMotr,-90);
   startMotor(drvRiteMotr,-90);
-  wait(0.2);
+  wait(0.3);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
   startMotor(topLeftMotr,spd+20);
   startMotor(topRiteMotr,spd+20);
-  wait(0.3);
+  wait(0.4);
   startMotor(topLeftMotr,stopSpd);
   startMotor(topRiteMotr,stopSpd);
 
 
-  SensorValue[rightEnc]=0;
-  startMotor(drvLeftMotr,-90);
+  SensorValue[rightEncoder]=0;
+ startMotor(drvLeftMotr,-90);
   startMotor(drvRiteMotr,-90);
-  untilEncoderCounts(-300,rightEncoder);
+  untilEncoderCounts(-100,rightEncoder);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
-  while(SensorValue[gyro] < 270)
+
+  while(SensorValue[gyro] > -50)
   {
   	pointTurn(right,90);
   }
@@ -216,22 +216,15 @@ stopMotor(drvRiteMotr);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
+
+
   wait(0.1);
 
-  SensorValue[leftEncoder]=0;
-
-   while(SensorValue[gyro] > -60)
+   while(SensorValue[gyro] > 60)
   {
   	pointTurn(right,90);
   }
 
-  wait(0.1);
-
-  startMotor(drvLeftMotr,100);
-  startMotor(drvRiteMotr,100);
-  wait(0.18);
-  stopMotor(drvLeftMotr);
-  stopMotor(drvRiteMotr);
 
   wait(0.1);
 
@@ -247,11 +240,11 @@ stopMotor(drvRiteMotr);
 
    startMotor(topLeftMotr,-spd+20);
   startMotor(topRiteMotr,-spd+20);
-  wait(0.3);
+  wait(0.5);
   startMotor(topLeftMotr,stopSpd);
   startMotor(topRiteMotr,stopSpd);
 
-  wait(0.5);
+  wait(1);
 
 
 
@@ -265,14 +258,15 @@ stopMotor(drvRiteMotr);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
+
 }
 
 else if(auto == 1){
 	waitInMilliseconds(10);
 
-startMotor(intake,-80);
-startMotor(intake2,-80);
-wait(0.3);
+startMotor(intake,-63);
+startMotor(intake2,-63);
+wait(0.4);
 stopMotor(intake);
 stopMotor(intake2);
 
@@ -316,7 +310,7 @@ while(SensorValue[gyro] < 100)
 
   wait(0.1);
  //turn to autoloader
-while(SensorValue[gyro] > -270)
+while(SensorValue[gyro] > -240)
   {
   	pointTurn(right,90);
   }
@@ -337,9 +331,9 @@ stopMotor(drvRiteMotr);
    wait(0.1);
 
 
-  startMotor(topLeftMotr,spd+10);
-  startMotor(topRiteMotr,spd+10);
-  wait(0.15);
+  startMotor(topLeftMotr,spd);
+  startMotor(topRiteMotr,spd);
+  wait(0.2);
   startMotor(topLeftMotr,stopSpd);
   startMotor(topRiteMotr,stopSpd);
 
@@ -349,7 +343,7 @@ stopMotor(drvRiteMotr);
   SensorValue[rightEncoder]=0;
   startMotor(drvLeftMotr,100);
   startMotor(drvRiteMotr,100);
- wait(0.7);
+ wait(0.6);
    stopMotor(drvLeftMotr);
    stopMotor(drvRiteMotr);
 
@@ -357,26 +351,32 @@ stopMotor(drvRiteMotr);
 
   startMotor(claw,100);
   wait(1);
-  startMotor(claw,0);
+  startMotor(claw,50);
 
   wait(0.1);
 
  startMotor(drvLeftMotr,-90);
   startMotor(drvRiteMotr,-90);
-  wait(0.2);
+  wait(0.3);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
   startMotor(topLeftMotr,spd+20);
   startMotor(topRiteMotr,spd+20);
-  wait(0.3);
+  wait(0.4);
   startMotor(topLeftMotr,stopSpd);
   startMotor(topRiteMotr,stopSpd);
 
 
+  SensorValue[rightEncoder]=0;
+ startMotor(drvLeftMotr,-90);
+  startMotor(drvRiteMotr,-90);
+  untilEncoderCounts(-100,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
 
 
-  while(SensorValue[gyro] < 170)
+  while(SensorValue[gyro] < 120)
   {
   	pointTurn(left,90);
   }
@@ -384,9 +384,6 @@ stopMotor(drvRiteMotr);
   stopMotor(drvLeftMotr);
   stopMotor(drvRiteMotr);
 
-  wait(0.1);
-
-  SensorValue[leftEncoder]=0;
 
 
   wait(0.1);
@@ -396,13 +393,6 @@ stopMotor(drvRiteMotr);
   	pointTurn(left,90);
   }
 
-  wait(0.1);
-
-  startMotor(drvLeftMotr,80);
-  startMotor(drvRiteMotr,80);
-  wait(0.1);
-  stopMotor(drvLeftMotr);
-  stopMotor(drvRiteMotr);
 
   wait(0.1);
 
@@ -458,24 +448,163 @@ wait(0.1);
 
     startMotor(intake,100);
 startMotor(intake2,100);
-wait(2);
+wait(1.5);
 stopMotor(intake);
 stopMotor(intake2);
 
 wait(0.1);
 
+
+/*
 SensorValue[rightEncoder]=0;
- startMotor(drvRiteMotr,-spd+20);
-  startMotor(drvLeftMotr,-spd+20);
- untilEncoderCounts(-200,rightEncoder);
+ startMotor(drvRiteMotr,-spd);
+  startMotor(drvLeftMotr,-spd);
+ untilEncoderCounts(-100,rightEncoder);
+  stopMotor(drvRiteMotr);
+  stopMotor(drvLeftMotr);
+*/
+  wait(0.1);
+
+   startMotor(topLeftMotr,spd+20);
+  startMotor(topRiteMotr,spd+20);
+  wait(0.2);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  while(SensorValue[gyro] > -1300){
+pointTurn(right,80);
+}
+
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+SensorValue[rightEncoder]=0;
+ startMotor(drvRiteMotr,-spd);
+  startMotor(drvLeftMotr,-spd);
+ untilEncoderCounts(-300,rightEncoder);
   stopMotor(drvRiteMotr);
   stopMotor(drvLeftMotr);
 
+   startMotor(topLeftMotr,-spd+20);
+  startMotor(topRiteMotr,-spd+20);
+  wait(0.3);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  SensorValue[rightEncoder]=0;
+  startMotor(drvLeftMotr, 80);
+  startMotor(drvRiteMotr, 80);
+  untilEncoderCounts(800,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+
+while(SensorValue[gyro] < 700){
+pointTurn(left,90);
+}
+
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+  startMotor(drvLeftMotr, 100);
+  startMotor(drvRiteMotr, 100);
+  wait(1.5);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  startMotor(drvLeftMotr, -100);
+  startMotor(drvRiteMotr, -100);
+  wait(2);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+}
+else if(auto==3){
+	while(SensorValue[gyro] <200){
+pointTurn(left,90);
+}
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+wait(0.1);
+
+ startMotor(topLeftMotr,spd+20);
+  startMotor(topRiteMotr,spd+20);
+  wait(0.5);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+    startMotor(intake,100);
+startMotor(intake2,100);
+wait(1.5);
+stopMotor(intake);
+stopMotor(intake2);
+
+wait(0.1);
+
+
+/*
+SensorValue[rightEncoder]=0;
+ startMotor(drvRiteMotr,-spd);
+  startMotor(drvLeftMotr,-spd);
+ untilEncoderCounts(-100,rightEncoder);
+  stopMotor(drvRiteMotr);
+  stopMotor(drvLeftMotr);
+*/
   wait(0.1);
 
-  while(SensorValue[gyro] >-900){
+   startMotor(topLeftMotr,spd+20);
+  startMotor(topRiteMotr,spd+20);
+  wait(0.2);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  while(SensorValue[gyro] < 1300){
+pointTurn(left,80);
+}
+
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+SensorValue[rightEncoder]=0;
+ startMotor(drvRiteMotr,-spd);
+  startMotor(drvLeftMotr,-spd);
+ untilEncoderCounts(-300,rightEncoder);
+  stopMotor(drvRiteMotr);
+  stopMotor(drvLeftMotr);
+
+   startMotor(topLeftMotr,-spd+20);
+  startMotor(topRiteMotr,-spd+20);
+  wait(0.3);
+  startMotor(topLeftMotr,stopSpd);
+  startMotor(topRiteMotr,stopSpd);
+
+  SensorValue[rightEncoder]=0;
+  startMotor(drvLeftMotr, 80);
+  startMotor(drvRiteMotr, 80);
+  untilEncoderCounts(800,rightEncoder);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+
+while(SensorValue[gyro] > -700){
 pointTurn(right,90);
 }
+
+stopMotor(drvLeftMotr);
+stopMotor(drvRiteMotr);
+
+  startMotor(drvLeftMotr, 100);
+  startMotor(drvRiteMotr, 100);
+  wait(1.5);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
+
+  startMotor(drvLeftMotr, -100);
+  startMotor(drvRiteMotr, -100);
+  wait(2);
+  stopMotor(drvLeftMotr);
+  stopMotor(drvRiteMotr);
 
 }
 
@@ -532,8 +661,8 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
     }
     else
     {
-         motor[topRiteMotr] = 9;
-         motor[topLeftMotr] = 8;
+         motor[topRiteMotr] = stopSpd;
+         motor[topLeftMotr] = stopSpd;
     }
 
 
@@ -543,6 +672,7 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
     {
     	   motor[lowRiteMotr] = 120;
          motor[lowLeftMotr] = 120;
+
 
 
          /*
@@ -557,38 +687,47 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
          motor[lowLeftMotr] = spd;}*/
     }
     else if(vexRT[Btn5D] == 1)
-    {    motor[lowRiteMotr] = -100;
-         motor[lowLeftMotr] = -100;
+    {    motor[lowRiteMotr] = -120;
+         motor[lowLeftMotr] = -120;
               wait(0.4);
            stopMotor(lowRiteMotr);
          stopMotor(lowLeftMotr);
+
     }
     else
     {
-         motor[lowRiteMotr] = stopSpd;
-         motor[lowLeftMotr] = stopSpd;
+         motor[lowRiteMotr] = 20;
+         motor[lowLeftMotr] = 20;
+
     }
+
+   if(vexRT[Btn8U]==1)      {
+  motor[lowRiteMotr]= 120;
+  motor[lowLeftMotr]= -120;
+  }
+
+  else if(vexRT[Btn7U]==1){
+  motor[lowLeftMotr]= 120;
+  motor[lowRiteMotr]=-120;
+  }
+
 //+++++++++++++++++++++++++++++++++++++++++++++| DRIVE |+++++++++++++++++++++++++++++++++++++++++++++
-    motor[drvLeftMotr]  = vexRT[Ch3];   // Left Joystick Y value
+    motor[drvLeftMotr] = vexRT[Ch3];   // Left Joystick Y value
     motor[drvRiteMotr] = vexRT[Ch2];
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ++++++++++
 
  if(vexRT[Btn7L]==1)      {
-  motor[intake]= -63;
-  motor[intake2]=-63;
+  motor[intake]= -126;
+  motor[intake2]=-126;
 
   }
   else if(vexRT[Btn7D]==1){
-  motor[intake]= 63;
-  motor[intake2]=63;
+  motor[intake]= 126;
+  motor[intake2]=126;
 
   }
-  else{motor[intake]=0;motor[intake2]=0;}
+  else{motor[intake]=0;motor[intake2]=5;}
 
-  if(vexRT[Btn8U]==1)      {
-  motor[lowRiteMotr]= 100;}
-  else if(vexRT[Btn7U]==1){
-  motor[lowLeftMotr]= 100; }
 
 
   if(vexRT[Btn8R]==1){
@@ -617,6 +756,15 @@ clearLCDLine(0);                      // Clear line 1 (0) of the LCD
   clearLCDLine(1);                      // Clear line 2 (1) of the LCD
   bLCDBacklight = true;                 // Turn on LCD Backlight
 	displayLCDString(0,0,"Blue Team Cube");
+	wait1Msec(500);
+}
+
+else if(nLCDButtons==3){
+auto=3;
+clearLCDLine(0);                      // Clear line 1 (0) of the LCD
+  clearLCDLine(1);                      // Clear line 2 (1) of the LCD
+  bLCDBacklight = true;                 // Turn on LCD Backlight
+	displayLCDString(0,0,"Red Team Cube");
 	wait1Msec(500);
 }
 	}

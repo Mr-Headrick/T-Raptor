@@ -152,9 +152,8 @@ stopMotor(drvRiteMotr);
 
    wait(0.1);
 
-
-  startMotor(topLeftMotr,spd+20);
-  startMotor(topRiteMotr,spd+20);
+  startMotor(topLeftMotr,spd+10);
+  startMotor(topRiteMotr,spd+10);
   wait(0.2);
   startMotor(topLeftMotr,stopSpd);
   startMotor(topRiteMotr,stopSpd);
@@ -162,7 +161,7 @@ stopMotor(drvRiteMotr);
   wait(0.1);
 
 
-  SensorValue[rightEncoder]=0;
+
   startMotor(drvLeftMotr,80);
   startMotor(drvRiteMotr,80);
   wait(0.6);
